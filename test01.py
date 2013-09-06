@@ -8,14 +8,20 @@ engine.execute("select 1").scalar()
 Session = sessionmaker(bind=engine)
 session = Session()
 X = True
+Z = ""
 classes.user.metadata.create_all(engine)
-while (X == True):
-	Z = raw_input("Inserte nombre: ")
-	A = classes.user(Z)
-	session.add(A)
-	if Z == "":
-		X = False
-session.commit()
+classes.player.metadata.create_all(engine)
+print("Creacion de personajes por usuario: ")
 for row in session.query(classes.user).order_by(classes.user.id):
-	print row.name
-print(session.query(classes.user).count())
+	print (row.name+": ")
+	while (Z != ""):
+		Z = raw_input("Ingrese nombre: ")
+		if(Z != ""):
+			Y = input("Ingrese nivel: ")
+			A = classes.player(Z,row.id)
+			A.level = Y
+			session.add(A)
+	Z = "0"
+session.commit()
+usuario = session.query(classes.user).filter_by(name="huehue").first()
+print(usuario.name)
